@@ -1,0 +1,9 @@
+<apex:page id="BillsMainPage" docType="html-5.0" controller="BillsMainPageController" sideBar="false"
+           standardStylesheets="false" applyBodyTag="false">
+    <apex:slds/>
+    <div class="slds-scope">
+        <apex:pageBlock>
+            Welcome {!LoggedUser.Name}
+        </apex:pageBlock>
+    </div>
+</apex:page>

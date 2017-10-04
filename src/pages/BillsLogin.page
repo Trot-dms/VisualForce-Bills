@@ -1,0 +1,65 @@
+<apex:page docType="html-5.0" id="BillsLogin" controller="BillsLoginController" sideBar="false"
+           standardStylesheets="false" applyBodyTag="false">
+    <apex:slds/>
+    <div class="slds-scope">
+        <apex:pageBlock rendered="{!IF(!HasUserLogIn, true, false)}">
+
+            <apex:messages id="errors"
+                           styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error"/>
+
+            <div class="slds-card">
+                <div class="slds-card__header">
+                    <h2 class="slds-text-heading--small">Please log in.</h2>
+                </div>
+
+                <div class="slds-grid slds-wrap">
+
+                    <div class="slds-form slds-m-left--large slds-m-bottom--small slds-size--3-of-6">
+                        <div class="slds-form slds-form_horizontal">
+                            <apex:form rendered="{!IF(Email==null,true,false)}">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="input-id-01">Email</label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-grid">
+                                            <div class="slds-col">
+                                                <apex:input id="email" value="{!Email}" styleClass="slds-input"
+                                                            title="Email"/>
+                                            </div>
+                                            <div class="slds-col">
+                                                <apex:commandButton styleClass="slds-button slds-button--brand"
+                                                                    value="Get key" action="{!obtainKey}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:form>
+                        </div>
+                    </div>
+
+                    <div class="slds-form slds-m-left--large slds-m-bottom--small slds-size--2-of-6">
+                        <div class="slds-form slds-form_horizontal">
+                            <apex:form rendered="{!IF(Email==null,false,true)}">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="input-id-01">Your key</label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-grid">
+                                            <div class="slds-col">
+                                                <apex:input id="key" value="{!Key}" styleClass="slds-input"
+                                                            title="Key"/>
+                                            </div>
+                                            <div class="slds-col">
+                                                <apex:commandButton styleClass="slds-button slds-button--brand"
+                                                                    value="Log in" action="{!loginWithKey}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </apex:pageBlock>
+    </div>
+</apex:page>

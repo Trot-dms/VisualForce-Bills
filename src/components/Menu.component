@@ -1,0 +1,18 @@
+<!--
+ - Created by Craftware on 2017-10-05.
+ -->
+
+<apex:component id="Menu" controller="BillsMainPageController">
+    <div>
+        <ul class="nav nav-sidebar">
+            <li class="{!IF(Menu == 'home', 'active', '')}"><a href="">Strona główna</a></li>
+            <li><a href="">Podsumowanie</a></li>
+            <li><a href="">Raporty</a></li>
+            <li><a href="">Inport/Export</a></li>
+        </ul>
+        <ul class="nav nav-sidebar">
+            <li><a href="">Wszystkie rachunki</a></li>
+            <li><a href="">Elementy usunięte</a></li>
+        </ul>
+    </div>
+</apex:component>

@@ -1,0 +1,27 @@
+<!--
+ - Created by Craftware on 2017-10-05.
+ -->
+
+<apex:component id="WelcomeMessage">
+    <apex:attribute name="loggedUserName" type="String" description="Logged user name"/>
+
+    <h1 class="page-header">
+        <p>Witaj <span>{!LoggedUserName}</span></p>
+    </h1>
+    <div class="row placeholders">
+        <div class="col-xs-6 col-sm-3 placeholder">
+
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+
+        </div>
+    </div>
+    <h2 class="sub-header">Aplikacja do zarządzania domowymi rachunkami.</h2>
+    <p>Aplikacja działa na platformie SalesForce.</p>
+</apex:component>

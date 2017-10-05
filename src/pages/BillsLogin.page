@@ -1,11 +1,62 @@
-<apex:page docType="html-5.0" id="BillsLogin" controller="BillsLoginController" sideBar="false"
+<apex:page docType="html-5.0" id="BillsLogin" controller="BillsLoginController" sideBar="false" showHeader="false"
            standardStylesheets="false" applyBodyTag="false">
+
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <style>
+        .msgIcon {
+            display: none!important
+        }
+        .customMessage * {
+            color: #fff!important
+        }
+        .customMessage {
+            margin: 5px 0!important;
+            max-width: 1280px;
+            opacity: 1!important;
+            width: 100%;
+            font-size: 12px;
+            border: 0px;
+            padding-left: 10px;
+        }
+        .message {
+            opacity: .1
+        }
+    </style>
+
+    <script>
+        $(document).ready(function(){
+           overridePageMessages();
+        });
+
+        function overridePageMessages(){
+            var textureEffect = '';
+            //Uncomment below line for texture effect on page messages
+            textureEffect = 'slds-theme--alert-texture';
+
+            $('.warningM3').addClass('slds-notify slds-notify--toast slds-theme--warning customMessage '+textureEffect);
+            $('.confirmM3').addClass('slds-notify slds-notify--alert slds-theme--success  customMessage '+textureEffect);
+            $('.errorM3').addClass('slds-notify slds-notify--alert slds-theme--error customMessage '+textureEffect);
+            $('.infoM3').addClass('slds-notify slds-notify--toast customMessage '+textureEffect);
+
+            $('.errorM3').removeClass('errorM3');
+            $('.confirmM3').removeClass('confirmM3');
+            $('.infoM3').removeClass('infoM3');
+            $('.warningM3').removeClass('warningM3');
+        }
+    </script>
     <apex:slds/>
     <div class="slds-scope">
         <apex:pageBlock rendered="{!IF(!HasUserLogIn, true, false)}">
 
-            <apex:messages id="errors"
-                           styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error"/>
+            <div class="slds-grid">
+                <div class="slds-col">
+                    <apex:pageMessages id="errors"/>
+                </div>
+            </div>
 
             <div class="slds-card">
                 <div class="slds-card__header">

@@ -7,12 +7,18 @@ public with sharing class BillsLoginController {
     public String Email { get; set; }
     public String Key { get; set; }
     public Boolean HasUserLogIn { get; set; }
+    public String Message { get; set; }
     private Contact contact;
 
     public BillsLoginController() {
         HasUserLogIn = false;
         Email = null;
         Key = null;
+        Message = null;
+        Message = ApexPages.currentPage().getParameters().get('message');
+        if (Message != null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, Message));
+        }
     }
 
     public PageReference obtainKey() {
@@ -29,6 +35,7 @@ public with sharing class BillsLoginController {
             HasUserLogIn = true;
             PageReference nextPage = Page.BillsMainPage;
             nextPage.getParameters().put('contact', contact.Id);
+            nextPage.getParameters().put('menu', 'home');
             return nextPage.setRedirect(true);
         }
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Wrong key.'));

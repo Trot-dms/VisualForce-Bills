@@ -1,0 +1,44 @@
+<!--
+ - Created by Craftware on 2017-10-05.
+ -->
+
+<apex:component id="Navigation" controller="BillsMainPageController">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar"><span class="sr-only">Toggle navigation</span>
+                    <span
+                            class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Rachunki</a></div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Twój profil</a></li>
+                    <li>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                           aria-expanded="false">
+                            Menu <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="">Podsumowanie</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="">Wszystkie rachunki</a></li>
+                            <li><a href="">Elementy usunięte</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <apex:form>
+                            <apex:commandLink styleClass="btn btn-side btn-primary"
+                                              value="Wyloguj" action="{!logoutUser}"/>
+                        </apex:form>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right" action="/search" method="GET">
+                    <input type="text" class="form-control" placeholder="Szukaj..." name="search" id="search"
+                           value="${search}"/>
+                </form>
+            </div>
+        </div>
+    </nav>
+</apex:component>

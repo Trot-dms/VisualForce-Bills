@@ -2,7 +2,7 @@
  - Created by Craftware on 2017-10-05.
  -->
 
-<apex:component id="Navigation" controller="BillsMainPageController">
+<apex:component id="Navigation" controller="BillsMainPageController" allowDML="true">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">

@@ -91,7 +91,7 @@
                         <div class="slds-form slds-form_horizontal">
                             <apex:form rendered="{!IF(Email==null,false,true)}">
                                 <div class="slds-form-element">
-                                    <label class="slds-form-element__label" for="input-id-01">Your key</label>
+                                    <label class="slds-form-element__label" for="input-id-01">Your key is {!Key}</label>
                                     <div class="slds-form-element__control">
                                         <div class="slds-grid">
                                             <div class="slds-col">
@@ -101,6 +101,8 @@
                                             <div class="slds-col">
                                                 <apex:commandButton styleClass="slds-button slds-button--brand"
                                                                     value="Log in" action="{!loginWithKey}"/>
+                                                <apex:commandButton styleClass="slds-button slds-button--destructive"
+                                                                    value="Force logout" action="{!forceLogOut}"/>
                                             </div>
                                         </div>
                                     </div>

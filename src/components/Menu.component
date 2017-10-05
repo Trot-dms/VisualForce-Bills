@@ -4,15 +4,41 @@
 
 <apex:component id="Menu" controller="BillsMainPageController">
     <div>
-        <ul class="nav nav-sidebar">
-            <li class="{!IF(Menu == 'home', 'active', '')}"><a href="">Strona główna</a></li>
-            <li><a href="">Podsumowanie</a></li>
-            <li><a href="">Raporty</a></li>
-            <li><a href="">Inport/Export</a></li>
-        </ul>
-        <ul class="nav nav-sidebar">
-            <li><a href="">Wszystkie rachunki</a></li>
-            <li><a href="">Elementy usunięte</a></li>
-        </ul>
+        <apex:form>
+            <ul class="nav nav-sidebar">
+                <li class="{!IF(Menu == 'home', 'active', '')}">
+                    <apex:commandLink value="Strona główna" action="{!setMenu}">
+                        <apex:param name="menu" value="home" assignTo="{!Menu}"/>
+                    </apex:commandLink>
+                </li>
+                <li class="{!IF(Menu == 'summary', 'active', '')}">
+                    <apex:commandLink value="Podsumowanie" action="{!setMenu}">
+                        <apex:param name="menu" value="summary" assignTo="{!Menu}"/>
+                    </apex:commandLink>
+                </li>
+                <li class="{!IF(Menu == 'reports', 'active', '')}">
+                    <apex:commandLink value="Raporty" action="{!setMenu}">
+                        <apex:param name="menu" value="reports" assignTo="{!Menu}"/>
+                    </apex:commandLink>
+                </li>
+                <li class="{!IF(Menu == 'import', 'active', '')}">
+                    <apex:commandLink value="Import / Export" action="{!setMenu}">
+                        <apex:param name="menu" value="import" assignTo="{!Menu}"/>
+                    </apex:commandLink>
+                </li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li class="{!IF(Menu == 'all', 'active', '')}">
+                    <apex:commandLink value="Wszystkie rachunki" action="{!setMenu}">
+                        <apex:param name="menu" value="all" assignTo="{!Menu}"/>
+                    </apex:commandLink>
+                </li>
+                <li class="{!IF(Menu == 'deleted', 'active', '')}">
+                    <apex:commandLink value="Elementy usunięte" action="{!setMenu}">
+                        <apex:param name="menu" value="deleted" assignTo="{!Menu}"/>
+                    </apex:commandLink>
+                </li>
+            </ul>
+        </apex:form>
     </div>
 </apex:component>

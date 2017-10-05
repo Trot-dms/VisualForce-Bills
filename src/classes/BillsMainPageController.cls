@@ -22,6 +22,13 @@ public with sharing class BillsMainPageController {
         return loginPage.setRedirect(true);
     }
 
+    public PageReference setMenu() {
+        PageReference menuPageReference = Page.BillsMainPage;
+        menuPageReference.getParameters().put('contact', LoggedUser.Id);
+        menuPageReference.getParameters().put('menu', Menu);
+        return menuPageReference.setRedirect(true);
+    }
+
     private void getParams() {
         ContactId = ApexPages.currentPage().getParameters().get('contact');
         Menu = ApexPages.currentPage().getParameters().get('menu');

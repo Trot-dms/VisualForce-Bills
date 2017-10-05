@@ -7,11 +7,13 @@
 
     <body>
 
+    <div class="loader"></div>
+
     <apex:pageBlock rendered="{!IF(IsError, true, false)}">
         <div class="alert alert-danger" role="alert">No good. Found errors.</div>
     </apex:pageBlock>
 
-    <apex:pageBlock rendered="{!IF(IsError, false, true)}">
+    <apex:pageBlock id="mainPage" rendered="{!IF(IsError, false, true)}">
         <c:Navigation/>
         <apex:messages id="errors" styleClass=""/>
         <div class="container-fluid">
@@ -28,11 +30,41 @@
                     </apex:pageBlockSection>
 
                     <!--Render summary content-->
+                    <apex:pageBlockSection rendered="{!IF(Menu =='summary',true,false)}">
+                        Summary
+                    </apex:pageBlockSection>
+
+                    <!--Render reports content-->
+                    <apex:pageBlockSection rendered="{!IF(Menu =='reports',true,false)}">
+                        Reports
+                    </apex:pageBlockSection>
+
+                    <!--Render import/export content-->
+                    <apex:pageBlockSection rendered="{!IF(Menu =='import',true,false)}">
+                        Import/Export
+                    </apex:pageBlockSection>
+
+                    <!--Render all bills content-->
+                    <apex:pageBlockSection rendered="{!IF(Menu =='all',true,false)}">
+                        All bills
+                    </apex:pageBlockSection>
+
+                    <!--Render deleted bills content-->
+                    <apex:pageBlockSection rendered="{!IF(Menu =='deleted',true,false)}">
+                        Deleted bills
+                    </apex:pageBlockSection>
+
 
                 </div>
             </div>
         </div>
 
     </apex:pageBlock>
+
+    <script type="text/javascript">
+        $(window).on('load', function() {
+            $(".loader").fadeOut("slow");
+        })
+    </script>
     </body>
 </apex:page>

@@ -1,0 +1,157 @@
+<!--
+ - Created by Craftware on 2017-10-06.
+ -->
+
+<apex:page id="BillsAll" standardController="Bill__c" recordSetVar="bills" docType="html-5.0" sideBar="false"
+           standardStylesheets="false" applyBodyTag="false" showHeader="false">
+
+    <div class="row">
+        <div class="col-md-2">
+            <h2 class="sub-header">Kalendarz</h2>
+            <div class="row">
+                <div id="sandbox-container"></div>
+            </div>
+
+            <div class="row">
+                <button class="btn btn-primary btn-sm btn-block">Wyczyść filtry</button>
+                <button class="btn btn-primary btn-sm btn-block">Wyczyść filtry</button>
+                <button class="btn btn-primary btn-sm btn-block">Wyczyść filtry</button>
+            </div>
+
+            <script type="text/javascript">
+                var collection = [];
+            </script>
+
+            <apex:repeat value="{!bills}" var="b">
+                <script>
+                    var obj = {
+                        'payDate': moment('{!b.Pay_Date__c}').format('DD/MM/YYYY'),
+                        'name' : '{!b.Name}',
+                        'status' : '{!b.Status__c}'
+                    }
+                    collection.push(obj);
+                </script>
+            </apex:repeat>
+
+            <script>
+                                $(document).ready(function () {
+                                    $("#sandbox-container").datepicker({
+                                        format: "dd/mm/yyyy",
+                                        weekStart: 1,
+                                        todayBtn: "linked",
+                                        todayHighlight: false,
+                                        beforeShowDay: function (date) {
+                                            var d = date;
+                                            var curr_date = d.getDate();
+                                            var curr_month = d.getMonth() + 1; //Months are zero based
+                                            var curr_year = d.getFullYear();
+
+                                            if (curr_date < 10) {
+                                                curr_date = '0' + curr_date;
+                                            }
+
+                                            if (curr_month < 10) {
+                                                curr_month = '0' + curr_month;
+                                            }
+                                            var formattedDate = curr_date + "/" + curr_month + "/" + curr_year;
+                                            var resultToPay;
+                                            var resultOther;
+
+                                            $.each(collection, function(key, value) {
+                                                if (formattedDate === value.payDate) {
+                                                    if (value.status === 'Do zapłaty') {
+                                                        if (resultToPay) {
+                                                            resultToPay += value.name +'\n';
+                                                        } else {
+                                                            resultToPay = value.name +'\n';
+                                                        }
+                                                    } else {
+                                                        if (resultOther) {
+                                                            resultOther += value.name + '\n';
+                                                        } else {
+                                                            resultOther = value.name + '\n';
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                                if (resultToPay) {
+                                                    return {
+                                                        tooltip: resultToPay,
+                                                        classes: 'alert-danger'
+                                                    }
+                                                } else if (resultOther) {
+                                                    return {
+                                                        tooltip: resultOther,
+                                                        classes: 'alert-info'
+                                                    }
+                                                }
+                                            return;
+                                        }
+                                    });
+                                });
+            </script>
+
+        </div>
+        <div class="col-md-10">
+            <h2 class="sub-header">Lista rachunków</h2>
+
+            <table id="dataTable" class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Nazwa rachunku</th>
+                    <th>Typ rachunku</th>
+                    <th>Wierzyciel</th>
+                    <th>Płatne do</th>
+                    <th>Zapłacono dnia</th>
+                    <th>Kwota</th>
+                </tr>
+                </thead>
+                <tbody>
+                <apex:repeat value="{!bills}" var="bill">
+                <tr>
+                    <td><apex:outputText value="{!bill.Status__c}"/></td>
+                    <td><apex:outputText value="{!bill.Name}"/></td>
+                    <td><apex:outputText value="{!bill.Type__c}"/></td>
+                    <td><apex:outputField value="{!bill.Loan_Holder__r.Name}"/></td>
+                    <td><apex:outputField value="{!bill.Pay_Date__c}"/></td>
+                    <td><apex:outputField value="{!bill.Payed_Date__c}"/></td>
+                    <td><apex:outputField value="{!bill.Price__c}"/></td>
+                </tr>
+                </apex:repeat>
+                </tbody>
+            </table>
+
+            <script>
+                $(document).ready(function() {
+                    $('#dataTable').DataTable( {
+                        "language": {
+                            "emptyTable":     "Brak danych.",
+                            "info":           "Rekordy od _START_ do _END_ (Wszystkich _TOTAL_)",
+                            "infoEmpty":      "Brak rekordów",
+                            "infoFiltered":   "(filtered from _MAX_ total entries)",
+                            "infoPostFix":    "",
+                            "thousands":      ",",
+                            "lengthMenu":     "Pokaż _MENU_ rekordów",
+                            "loadingRecords": "Loading...",
+                            "processing":     "Processing...",
+                            "search":         "Szukaj:",
+                            "zeroRecords":    "Nie znaleziono rekordów spełniających kryteria",
+                            "paginate": {
+                                "first":      "Początek",
+                                "last":       "Koniec",
+                                "next":       "Następna",
+                                "previous":   "Poprzednia"
+                            },
+                            "aria": {
+                                "sortAscending":  ": activate to sort column ascending",
+                                "sortDescending": ": activate to sort column descending"
+                            }
+                        }
+                    });
+                } );
+            </script>
+        </div>
+    </div>
+
+</apex:page>

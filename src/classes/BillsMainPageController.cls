@@ -31,14 +31,18 @@ public with sharing class BillsMainPageController {
 
     public PageReference setMenu() {
         PageReference menuPageReference = Page.BillsMainPage;
+        return setParams(menuPageReference).setRedirect(true);
+    }
+
+    private PageReference setParams(PageReference pageReference) {
         try {
-            menuPageReference.getParameters().put('contact', LoggedUser.Id);
-            menuPageReference.getParameters().put('menu', Menu);
-            menuPageReference.getParameters().put('key', Key);
+            pageReference.getParameters().put('contact', LoggedUser.Id);
+            pageReference.getParameters().put('menu', Menu);
+            pageReference.getParameters().put('key', Key);
         } catch (Exception e) {
             IsError = true;
         }
-        return menuPageReference.setRedirect(true);
+        return pageReference;
     }
 
     private void getParams() {

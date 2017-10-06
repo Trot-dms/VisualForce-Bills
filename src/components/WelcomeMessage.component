@@ -4,7 +4,6 @@
 
 <apex:component id="WelcomeMessage">
     <apex:attribute name="loggedUserName" type="String" description="Logged user name"/>
-
     <h1 class="page-header">
         <p>Witaj <span>{!LoggedUserName}</span></p>
     </h1>

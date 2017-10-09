@@ -25,35 +25,34 @@
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
                     <!--Render home content-->
-                    <apex:pageBlockSection rendered="{!IF(Menu =='home',true,false)}">
+                    <apex:pageBlock rendered="{!IF(Menu =='home',true,false)}">
                         <c:WelcomeMessage LoggedUserName="{!LoggedUser.Name}"/>
-                    </apex:pageBlockSection>
+                    </apex:pageBlock>
 
                     <!--Render summary content-->
-                    <apex:pageBlockSection rendered="{!IF(Menu =='summary',true,false)}">
+                    <apex:pageBlock rendered="{!IF(Menu =='summary',true,false)}">
                         Summary
-                    </apex:pageBlockSection>
+                    </apex:pageBlock>
 
                     <!--Render reports content-->
-                    <apex:pageBlockSection rendered="{!IF(Menu =='reports',true,false)}">
+                    <apex:pageBlock rendered="{!IF(Menu =='reports',true,false)}">
                         Reports
-                    </apex:pageBlockSection>
+                    </apex:pageBlock>
 
                     <!--Render import/export content-->
-                    <apex:pageBlockSection rendered="{!IF(Menu =='import',true,false)}">
+                    <apex:pageBlock rendered="{!IF(Menu =='import',true,false)}">
                         Import/Export
-                    </apex:pageBlockSection>
+                    </apex:pageBlock>
 
                     <!--Render all bills content-->
-                    <apex:pageBlockSection rendered="{!IF(Menu =='all',true,false)}">
-                        All bills
-                    </apex:pageBlockSection>
+                    <apex:pageBlock rendered="{!IF(Menu =='all',true,false)}">
+                        <apex:include pageName="billsall"/>
+                    </apex:pageBlock>
 
                     <!--Render deleted bills content-->
-                    <apex:pageBlockSection rendered="{!IF(Menu =='deleted',true,false)}">
+                    <apex:pageBlock rendered="{!IF(Menu =='deleted',true,false)}">
                         Deleted bills
-                    </apex:pageBlockSection>
-
+                    </apex:pageBlock>
 
                 </div>
             </div>
@@ -65,6 +64,9 @@
         $(window).on('load', function() {
             $(".loader").fadeOut("slow");
         })
+
+
+
     </script>
     </body>
 </apex:page>

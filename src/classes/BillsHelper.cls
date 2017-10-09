@@ -33,4 +33,59 @@ public with sharing class BillsHelper {
         }
         return null;
     }
+
+    public static List<Bill__c> getAllBills() {
+        return [
+                SELECT
+                        Bill_Owner__c,
+                        Id,
+                        Loan_Holder__c,
+                        Loan_Holder__r.Name,
+                        Name,
+                        OwnerId,
+                        Pay_Date__c,
+                        Payed_Date__c,
+                        Price__c,
+                        Status__c,
+                        Title__c,
+                        Type__c
+                FROM Bill__c
+        ];
+    }
+
+    public static List<Bill__c> getBillsByDay(String day) {
+        List<Bill__c> bills = new List<Bill__c>();
+        bills = [
+                SELECT
+                        Bill_Owner__c,
+                        Id,
+                        Loan_Holder__c,
+                        Loan_Holder__r.Name,
+                        Name,
+                        OwnerId,
+                        Pay_Date__c,
+                        Payed_Date__c,
+                        Price__c,
+                        Status__c,
+                        Title__c,
+                        Type__c
+                FROM Bill__c
+                WHERE Pay_Date__c = :formatDate(day)
+        ];
+        return bills;
+    }
+
+    public static Date formatDate(String unformatedDate) {
+        String[] d = unformatedDate.split('/');
+        Date newDate = Date.today();
+        if (d.size() <> 3) {
+            return newDate;
+        }
+        try {
+            newDate = Date.newInstance(Integer.valueOf(d[2]), Integer.valueOf(d[1]), Integer.valueOf(d[0]));
+        } catch (TypeException e) {
+            System.debug('Error parsing date from view : ' + unformatedDate);
+        }
+        return newDate;
+    }
 }

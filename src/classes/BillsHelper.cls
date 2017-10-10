@@ -24,7 +24,18 @@ public with sharing class BillsHelper {
      * @return Contact or null
      */
     public static Contact findContactByEmail(String email) {
-        Contact[] contact = [SELECT Id, Email, Name, Key__c, IsLoggedOn__c FROM Contact WHERE Email = :email];
+        Contact[] contact = [SELECT Id, Email, Name, Key__c, IsLoggedOn__c, Key_Refresh_Time__c FROM Contact WHERE Email = :email];
+        if (contact.size() > 0) {
+            if (contact.size() > 1) {
+                return null;
+            }
+            return contact[0];
+        }
+        return null;
+    }
+
+    public static Contact findContactById(String id) {
+        Contact[] contact = [SELECT Id, Email, Name, Key__c, IsLoggedOn__c, Key_Refresh_Time__c FROM Contact WHERE Id = :id];
         if (contact.size() > 0) {
             if (contact.size() > 1) {
                 return null;
@@ -108,5 +119,18 @@ public with sharing class BillsHelper {
             System.debug('Error parsing date from view : ' + unformatedDate);
         }
         return newDate;
+    }
+
+    public static void refreshKeyTime(Contact contact) {
+        Datetime dt = Datetime.now();
+        try {
+            contact.Key_Refresh_Time__c = dt;
+            update contact;
+        } catch (DmlException e) {
+            System.debug('Error refreshing key.');
+            BillsMainPageController ctr = new BillsMainPageController();
+            ctr.logoutUser();
+        }
+
     }
 }

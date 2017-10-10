@@ -2,7 +2,7 @@
  - Created by Craftware on 2017-10-06.
  -->
 
-<apex:page id="BillsAll" controller="BillsAllControllerExt" docType="html-5.0" sideBar="false"
+<apex:page id="BillsAll" controller="BillsAllControllerExt" docType="html-5.0" sideBar="false" action="{!refreshKeyTime}"
            standardStylesheets="false" applyBodyTag="false" showHeader="false">
 
     <apex:form id="mainForm">

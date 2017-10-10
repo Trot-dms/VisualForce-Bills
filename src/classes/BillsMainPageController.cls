@@ -20,6 +20,7 @@ public with sharing class BillsMainPageController {
     public PageReference logoutUser() {
         try {
             LoggedUser.IsLoggedOn__c = false;
+            LoggedUser.Key_Refresh_Time__c = null;
             update LoggedUser;
         } catch (DmlException e) {
             System.debug(e.getMessage());
@@ -32,6 +33,10 @@ public with sharing class BillsMainPageController {
     public PageReference setMenu() {
         PageReference menuPageReference = Page.BillsMainPage;
         return setParams(menuPageReference).setRedirect(true);
+    }
+
+    public void refreshKeyTime() {
+        BillsHelper.refreshKeyTime(LoggedUser);
     }
 
     private PageReference setParams(PageReference pageReference) {
@@ -53,7 +58,7 @@ public with sharing class BillsMainPageController {
 
     private Contact getLoggedUser() {
         if (!IsError) {
-            List<Contact> contacts = [SELECT Id, Name, Email, Key__c, IsLoggedOn__c FROM Contact WHERE Id = :ContactId];
+            List<Contact> contacts = [SELECT Id, Name, Email, Key__c, IsLoggedOn__c, Key_Refresh_Time__c FROM Contact WHERE Id = :ContactId];
             if (contacts.size() == 0) {
                 return null;
             } else return contacts[0];

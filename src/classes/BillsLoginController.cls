@@ -46,6 +46,7 @@ public with sharing class BillsLoginController {
             HasUserLogIn = true;
             try {
                 contact.IsLoggedOn__c = true;
+                contact.Key_Refresh_Time__c = Datetime.now();
                 update contact;
             } catch (DmlException e) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'DB error.'));
@@ -67,6 +68,7 @@ public with sharing class BillsLoginController {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'User logged out by force.'));
             try {
                 contact.IsLoggedOn__c = false;
+                contact.Key_Refresh_Time__c = null;
                 update contact;
             } catch (DmlException e) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));

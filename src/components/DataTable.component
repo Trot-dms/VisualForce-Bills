@@ -1,0 +1,39 @@
+<!--
+ - Created by Craftware on 2017-10-10.
+ -->
+
+<apex:component id="DataTable">
+    <script>
+                $(document).ready(function() {
+                    $('#dataTable').DataTable( {
+                        "order": [[5, 'desc']],
+                        "columnDefs": [
+                            { "orderable": false, "targets": 0 }
+                        ],
+                        "language": {
+                            "emptyTable":     "Brak danych.",
+                            "info":           "Rekordy od _START_ do _END_ (Wszystkich _TOTAL_)",
+                            "infoEmpty":      "Brak rekordów",
+                            "infoFiltered":   "(filtered from _MAX_ total entries)",
+                            "infoPostFix":    "",
+                            "thousands":      ",",
+                            "lengthMenu":     "Pokaż _MENU_ rekordów",
+                            "loadingRecords": "Loading...",
+                            "processing":     "Processing...",
+                            "search":         "Szukaj:",
+                            "zeroRecords":    "Nie znaleziono rekordów spełniających kryteria",
+                            "paginate": {
+                                "first":      "Początek",
+                                "last":       "Koniec",
+                                "next":       "Następna",
+                                "previous":   "Poprzednia"
+                            },
+                            "aria": {
+                                "sortAscending":  ": activate to sort column ascending",
+                                "sortDescending": ": activate to sort column descending"
+                            }
+                        }
+                    });
+                } );
+                </script>
+</apex:component>

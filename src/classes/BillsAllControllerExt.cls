@@ -4,6 +4,7 @@
 
 public with sharing class BillsAllControllerExt {
 
+    public Bill__c BillSelected { get; set; }
     public String DateSelected { get; set; }
     public String IdBillSelected { get; set; }
     public List<Bill__c> Bills { get; set; }
@@ -25,4 +26,8 @@ public with sharing class BillsAllControllerExt {
         return null;
     }
 
+    public void getBill() {
+        IdBillSelected = ApexPages.currentPage().getParameters().get('billId');
+        BillSelected = BillsHelper.getBillById(IdBillSelected);
+    }
 }

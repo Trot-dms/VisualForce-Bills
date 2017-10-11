@@ -3,17 +3,18 @@
  -->
 
 <apex:component id="ShowDetails">
-    <apex:attribute name="BillId" type="String" description="Selected bill Id"/>
+    <apex:attribute name="bill" description="bill" type="Bill__c"/>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">{!BillId}</h4>
+                    <h4 class="modal-title">{!bill.Name}</h4>
                 </div>
                 <div class="modal-body">
                     <p>One fine body&hellip;</p>
+                    <apex:inputField id="billName" value="{!bill.Name}" styleClass="form-control"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

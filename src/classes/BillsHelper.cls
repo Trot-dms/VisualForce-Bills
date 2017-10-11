@@ -133,4 +133,20 @@ public with sharing class BillsHelper {
         }
 
     }
+
+    public static List<SelectOption> getFromPickList(SObject obj, String field) {
+        List<SelectOption> options = new List<SelectOption>();
+
+        Schema.SObjectType objectType = obj.getSObjectType();
+        Schema.DescribeSObjectResult objDescribe = objectType.getDescribe();
+
+        Map<String, Schema.SObjectField> fieldMap = objDescribe.fields.getMap();
+
+        List<Schema.PicklistEntry> values = fieldMap.get(field).getDescribe().getPicklistValues();
+
+        for (Schema.PicklistEntry f : values) {
+            options.add(new SelectOption(f.getLabel(), f.getValue()));
+        }
+        return options;
+    }
 }

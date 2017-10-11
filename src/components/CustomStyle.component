@@ -24,6 +24,7 @@
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/pl.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/currencyformatter.js/1.0.5/currencyFormatter.min.js"></script>
     <style type="text/css">
            /*
  * Base structure

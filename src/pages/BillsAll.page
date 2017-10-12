@@ -5,7 +5,82 @@
 <apex:page id="BillsAll" controller="BillsAllControllerExt" docType="html-5.0" sideBar="false" action="{!refreshKeyTime}"
            standardStylesheets="false" applyBodyTag="false" showHeader="false">
 
+    <apex:remoteObjects jsNamespace="BillModel">
+        <apex:remoteObjectModel name="Bill__c" fields="Id, Name, OwnerId">
+            <apex:remoteObjectField name="Bill_Owner__c" jsShorthand="BillOwner"/>
+            <apex:remoteObjectField name="Loan_Holder__c" jsShorthand="LoanHolder"/>
+            <apex:remoteObjectField name="Pay_Date__c" jsShorthand="PayDate"/>
+            <apex:remoteObjectField name="Payed_Date__c" jsShorthand="PayedDate"/>
+            <apex:remoteObjectField name="Price__c" jsShorthand="Price"/>
+            <apex:remoteObjectField name="Status__c" jsShorthand="Status"/>
+            <apex:remoteObjectField name="Type__c" jsShorthand="Type"/>
+        </apex:remoteObjectModel>
+    </apex:remoteObjects>
+
+    <script type="text/javascript">
+        var collection = [];
+        var b = new BillModel.Bill__c();
+        var bill = [];
+
+        function getBill(billId) {
+            b.retrieve({where: {Id: {eq: billId}}}, function(error, records, event) {
+                createObject(records);
+            } );
+        }
+
+        function createObject(source) {
+            bill = {
+                'id': source[0].get('Id'),
+                'title': source[0].get('Name'),
+                'owner': source[0].get('BillOwner'),
+                'loan': source[0].get('LoanHolder'),
+                'payDate': moment(source[0].get('PayDate')).format('DD/MM/YYYY'),
+                'payedDate': moment(source[0].get('PayedDate')).format('DD/MM/YYYY'),
+                'price': source[0].get('Price'),
+                'status': source[0].get('Status'),
+                'type': source[0].get('Type')
+            }
+            fillModal();
+        }
+
+        function fillModal() {
+            $('#billModalTitle').html(bill.title);
+            $('#billTitle').val(bill.title);
+            $('#billDate1').val(bill.payDate);
+            $('#billDate2').val(bill.payedDate);
+            $('#billPrice').val(OSREC.CurrencyFormatter.format(bill.price, { currency: 'PLN' }));
+        }
+
+        function setSendForm() {
+            $("[id$=hiddenBillId]").val(bill.id);
+            $("[id$=hiddenBillPayDate]").val($("#billDate1").val());
+            $("[id$=hiddenBillPayedDate]").val($("#billDate2").val());
+            $("[id$=hiddenBillTitle]").val($("#billTitle").val());
+            $("[id$=hiddenBillPrice]").val($("#billPrice").val());
+            console.log($("#billDate1").val());
+        }
+    </script>
+
+    <apex:repeat value="{!AllBills}" var="b">
+        <script>
+                    var obj = {
+                        'payDate': moment('{!b.Pay_Date__c}').format('DD/MM/YYYY'),
+                        'name' : '{!b.Name}',
+                        'status' : '{!b.Status__c}'
+                    }
+                    collection.push(obj);
+                    </script>
+    </apex:repeat>
+
     <apex:form id="mainForm">
+
+        <apex:actionFunction name="sendBillForm" action="{!getFormData}">
+            <apex:param value="" name="title" assignTo="{!title}"/>
+            <apex:param value="" name="payDate" assignTo="{!payDate}"/>
+            <apex:param value="" name="payedDate" assignTo="{!payedDate}"/>
+            <apex:param value="" name="price" assignTo="{!price}"/>
+        </apex:actionFunction>
+
         <div class="row">
             <div class="col-md-3">
                 <h2 class="sub-header">Kalendarz</h2>
@@ -29,30 +104,15 @@
                     <apex:commandButton styleClass="btn btn-primary btn-block" value="Pokaż wszystkie"
                                         action="{!showAll}"/>
 
-                    <apex:outputPanel id="billModal">
-                        <c:ShowDetails bill="{!BillSelected}"/>
-                        <button type="button" class="btn btn-primary btn-block {!IF(BillSelected==null,'hidden','')}" data-toggle="modal" data-target="#myModal">
-                            Pokaż szczegóły {!BillSelected.Name}
-                        </button>
-                    </apex:outputPanel>
+                    <!--<apex:outputPanel id="billModalNew">-->
+                        <!--<c:ShowDetails/>-->
+                        <!--<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">-->
+                            <!--Nowy rachunek-->
+                        <!--</button>-->
+                    <!--</apex:outputPanel>-->
 
                 </div>
 
-                <script type="text/javascript">
-                var collection = [];
-
-                </script>
-
-                <apex:repeat value="{!AllBills}" var="b">
-                    <script>
-                    var obj = {
-                        'payDate': moment('{!b.Pay_Date__c}').format('DD/MM/YYYY'),
-                        'name' : '{!b.Name}',
-                        'status' : '{!b.Status__c}'
-                    }
-                    collection.push(obj);
-                    </script>
-                </apex:repeat>
                 <c:DatePicker/>
 
             </div>
@@ -76,10 +136,7 @@
                         <tr>
                             <td>
                                 <apex:outputPanel id="billName">
-                                    <input name="selectedBill" type="radio" aria-label="..."/>
-                                    <apex:actionSupport event="onclick" action="{!getBill}" reRender="billModal">
-                                        <apex:param value="{!b.Id}" name="billId"/>
-                                    </apex:actionSupport>
+                                    <input name="selectedBill" type="radio" aria-label="..." onclick="getBill('{!b.Id}'); fillModal(); $('#myModal').modal('show');"/>
                                 </apex:outputPanel>
                             </td>
                             <td>
@@ -110,6 +167,119 @@
                 <c:DataTable/>
             </div>
         </div>
+
+        <!--Modal window-->
+        <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+            <apex:inputHidden id="hiddenBillId" value="{!billId}"/>
+            <apex:inputHidden id="hiddenBillPayDate" value="{!payDate}"/>
+            <apex:inputHidden id="hiddenBillPayedDate" value="{!payedDate}"/>
+            <apex:inputHidden id="hiddenBillPrice" value="{!price}"/>
+            <apex:inputHidden id="hiddenBillTitle" value="{!title}"/>
+
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><span id="billModalTitle"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="form-group">
+                                    <label>Nazwa</label>
+                                    <input id="billTitle" class="form-control" value=""/>
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label>Wybierz status rachunku:</label>
+                                        <apex:selectList id="billStatus" styleClass="form-control" value="{!selectedStatus}" size="1">
+                                            <apex:selectOptions value="{!statuses}"/>
+                                        </apex:selectList>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Płatne do:</label>
+                                        <div class='input-group date' id='datetimepicker1'>
+                                            <input id="billDate1" class="form-control" value=""/>
+                                            <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                        </div>
+                                    <script>
+                                        $(document).ready(function () {
+                                            $("#datetimepicker1").datepicker({
+                                            format: "dd/mm/yyyy",
+                                            weekStart: 1,
+                                            todayBtn: "linked",
+                                            todayHighlight: true,
+                                            language: 'pl'
+                                            });
+                                        });
+                                    </script>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Kwota (w zł)</label>
+                                        <div class="input-group">
+                                            <input id="billPrice" class="form-control" value=""/>
+                                            <div class="input-group-addon">zł</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label>Aktywni wierzyciele:</label>
+                                        <apex:selectList styleClass="form-control" value="{!selectedLoanHolder}" size="1">
+                                            <apex:selectOptions value="{!loanHolders}"/>
+                                        </apex:selectList>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Data zapłaty:</label>
+                                        <div class='input-group date' id='datetimepicker2'>
+                                            <input id="billDate2" class="form-control" value=""/>
+                                            <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                        </div>
+                                        <script>
+                                        $(document).ready(function () {
+                                            $("#datetimepicker2").datepicker({
+                                            format: "dd/mm/yyyy",
+                                            weekStart: 1,
+                                            todayBtn: "linked",
+                                            todayHighlight: true,
+                                            language: 'pl'
+                                            });
+                                        });
+                                    </script>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Typ rachunku</label>
+                                        <apex:selectList styleClass="form-control" value="{!selectedType}" size="1">
+                                            <apex:selectOptions value="{!types}"/>
+                                        </apex:selectList>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                            <apex:commandButton value="Zapisz zmiany" styleClass="btn btn-primary" onclick="setSendForm(); sendBillForm(); return false;" reRender="BillsAll.mainForm"/>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
     </apex:form>
 
 </apex:page>

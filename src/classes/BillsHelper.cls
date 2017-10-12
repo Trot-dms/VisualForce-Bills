@@ -78,6 +78,10 @@ public with sharing class BillsHelper {
         return runGenericQuery('Id', id)[0];
     }
 
+    public static Account getAccountByName(String name) {
+        return [SELECT Id, Name FROM Account WHERE Name = :name LIMIT 1];
+    }
+
     /**
      * Performs a generic query on Bill object.
      *
@@ -133,4 +137,35 @@ public with sharing class BillsHelper {
         }
 
     }
+
+    public static List<SelectOption> getFromPickList(SObject obj, String field) {
+        List<SelectOption> options = new List<SelectOption>();
+
+        Schema.SObjectType objectType = obj.getSObjectType();
+        Schema.DescribeSObjectResult objDescribe = objectType.getDescribe();
+
+        Map<String, Schema.SObjectField> fieldMap = objDescribe.fields.getMap();
+
+        List<Schema.PicklistEntry> values = fieldMap.get(field).getDescribe().getPicklistValues();
+
+        for (Schema.PicklistEntry f : values) {
+            options.add(new SelectOption(f.getLabel(), f.getValue()));
+        }
+        return options;
+    }
+
+    public static Decimal getCurrencyFromString(String source) {
+        String value = '';
+        Decimal div = 100;
+
+        Pattern p = Pattern.compile('(\\d+)');
+        Matcher m = p.matcher(source);
+        if (m.find()) {
+            do {
+                value += m.group();
+            } while (m.find());
+        }
+        return Decimal.valueOf(value).setScale(2) / div;
+    }
+
 }

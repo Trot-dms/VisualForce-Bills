@@ -5,6 +5,7 @@
 public with sharing class BillsAllControllerExt {
 
     public Bill__c BillSelected { get; set; }
+    public Bill__c NewBill { get; set; }
     public String DateSelected { get; set; }
     public String IdBillSelected { get; set; }
     public List<Bill__c> Bills { get; set; }
@@ -25,6 +26,7 @@ public with sharing class BillsAllControllerExt {
     public BillsAllControllerExt() {
         AllBills = BillsHelper.getAllBills();
         Bills = AllBills;
+        NewBill = new Bill__c();
         LoggedUserId = ApexPages.currentPage().getParameters().get('contact');
         if (LoggedUserId != null) {
             LoggedUser = BillsHelper.findContactById(LoggedUserId);
@@ -85,30 +87,31 @@ public with sharing class BillsAllControllerExt {
         System.debug('### Payed :' + payedDate);
         System.debug('### Price :' + price);
         System.debug('### ID :' + billId);
-        Bill__c bill = [
-                SELECT
-                        Bill_Owner__c,
-                        Id,
-                        Loan_Holder__c,
-                        Name,
-                        OwnerId,
-                        Pay_Date__c,
-                        Payed_Date__c,
-                        Price__c,
-                        Status__c,
-                        Title__c,
-                        Type__c
-                FROM Bill__c
-                WHERE Id = :billId
-                LIMIT 1
-        ];
-        Account account = [SELECT Id, Name FROM Account WHERE Name = :selectedLoanHolder];
+        Account account = BillsHelper.getAccountByName(selectedLoanHolder);
+        Bill__c bill;
         try {
-            bill.Name = title;
-            bill.Loan_Holder__c = account.Id;
-            bill.Status__c = selectedStatus;
-            bill.Type__c = selectedType;
-            update bill;
+            if (billId == null || billId.equals('')) {
+                bill = new Bill__c();
+                bill.Name = title;
+                bill.Bill_Owner__c = LoggedUser.Id;
+                bill.Loan_Holder__c = account.Id;
+                bill.Status__c = selectedStatus;
+                bill.Type__c = selectedType;
+                bill.Pay_Date__c = BillsHelper.formatDate(payDate);
+                bill.Payed_Date__c = BillsHelper.formatDate(payedDate);
+                bill.Price__c = BillsHelper.getCurrencyFromString(price);
+                insert bill;
+            } else {
+                bill = BillsHelper.getBillById(billId);
+                bill.Name = title;
+                bill.Loan_Holder__c = account.Id;
+                bill.Status__c = selectedStatus;
+                bill.Type__c = selectedType;
+                bill.Pay_Date__c = BillsHelper.formatDate(payDate);
+                bill.Payed_Date__c = BillsHelper.formatDate(payedDate);
+                bill.Price__c = BillsHelper.getCurrencyFromString(price);
+                update bill;
+            }
         } catch (DmlException e) {
             System.debug(e.getMessage());
         }

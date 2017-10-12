@@ -78,6 +78,10 @@ public with sharing class BillsHelper {
         return runGenericQuery('Id', id)[0];
     }
 
+    public static Account getAccountByName(String name) {
+        return [SELECT Id, Name FROM Account WHERE Name = :name LIMIT 1];
+    }
+
     /**
      * Performs a generic query on Bill object.
      *
@@ -149,4 +153,19 @@ public with sharing class BillsHelper {
         }
         return options;
     }
+
+    public static Decimal getCurrencyFromString(String source) {
+        String value = '';
+        Decimal div = 100;
+
+        Pattern p = Pattern.compile('(\\d+)');
+        Matcher m = p.matcher(source);
+        if (m.find()) {
+            do {
+                value += m.group();
+            } while (m.find());
+        }
+        return Decimal.valueOf(value).setScale(2) / div;
+    }
+
 }

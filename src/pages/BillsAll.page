@@ -17,13 +17,27 @@
         </apex:remoteObjectModel>
     </apex:remoteObjects>
 
+    <apex:remoteObjects jsNamespace="LoanHolderModel">
+        <apex:remoteObjectModel name="Account" fields="Id, Name">
+        </apex:remoteObjectModel>
+    </apex:remoteObjects>
+
     <script type="text/javascript">
         var collection = [];
         var b = new BillModel.Bill__c();
+        var l = new LoanHolderModel.Account();
         var bill = [];
+        var loan = [];
 
         function getBill(billId) {
             b.retrieve({where: {Id: {eq: billId}}}, function(error, records, event) {
+
+                l.retrieve({where: {Id: {eq: records[0].get('LoanHolder')}}}, function(error, records, event) {
+                    loan = {
+                        'id': records[0].get('Id'),
+                        'name': records[0].get('Name')
+                    };
+                } );
                 createObject(records);
             } );
         }
@@ -49,6 +63,24 @@
             $('#billDate1').val(bill.payDate);
             $('#billDate2').val(bill.payedDate);
             $('#billPrice').val(OSREC.CurrencyFormatter.format(bill.price, { currency: 'PLN' }));
+            $("[id$=billStatus]").val(bill.status);
+            $("[id$=billType]").val(bill.type);
+//            $("[id$=billLoan]").val(loan.name);
+
+            $('#myModal').modal('show');
+        }
+
+        function emptyModal() {
+            var today = moment(new Date()).format('DD/MM/YYYY');
+            var newTitle = 'Nowy rachunek z dnia '+today;
+
+            $('#billModalTitle').html(newTitle);
+            $('#billTitle').val(newTitle);
+            $('#billDate1').val(today);
+            $('#billDate2').val(today);
+            $('#billPrice').val(OSREC.CurrencyFormatter.format('0', { currency: 'PLN' }));
+
+            $('#myModal').modal('show');
         }
 
         function setSendForm() {
@@ -57,7 +89,20 @@
             $("[id$=hiddenBillPayedDate]").val($("#billDate2").val());
             $("[id$=hiddenBillTitle]").val($("#billTitle").val());
             $("[id$=hiddenBillPrice]").val($("#billPrice").val());
-            console.log($("#billDate1").val());
+        }
+
+        function createNewBill() {
+            bill = [];
+            bill.id = null;
+            emptyModal();
+        }
+
+        function deleteBill() {
+            if (bill.id) {
+                b.del(bill.id, function(err, ids) {
+                    refreshPage();
+                });
+            }
         }
     </script>
 
@@ -79,6 +124,9 @@
             <apex:param value="" name="payDate" assignTo="{!payDate}"/>
             <apex:param value="" name="payedDate" assignTo="{!payedDate}"/>
             <apex:param value="" name="price" assignTo="{!price}"/>
+        </apex:actionFunction>
+
+        <apex:actionFunction name="refreshPage" action="{!showAll}">
         </apex:actionFunction>
 
         <div class="row">
@@ -104,13 +152,7 @@
                     <apex:commandButton styleClass="btn btn-primary btn-block" value="Pokaż wszystkie"
                                         action="{!showAll}"/>
 
-                    <!--<apex:outputPanel id="billModalNew">-->
-                        <!--<c:ShowDetails/>-->
-                        <!--<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">-->
-                            <!--Nowy rachunek-->
-                        <!--</button>-->
-                    <!--</apex:outputPanel>-->
-
+                    <button type="button" class="btn btn-primary btn-block" onclick="createNewBill();">Nowy rachunek</button>
                 </div>
 
                 <c:DatePicker/>
@@ -136,7 +178,7 @@
                         <tr>
                             <td>
                                 <apex:outputPanel id="billName">
-                                    <input name="selectedBill" type="radio" aria-label="..." onclick="getBill('{!b.Id}'); fillModal(); $('#myModal').modal('show');"/>
+                                    <input name="selectedBill" type="radio" aria-label="..." onclick="getBill('{!b.Id}');"/>
                                 </apex:outputPanel>
                             </td>
                             <td>
@@ -235,7 +277,7 @@
 
                                     <div class="form-group">
                                         <label>Aktywni wierzyciele:</label>
-                                        <apex:selectList styleClass="form-control" value="{!selectedLoanHolder}" size="1">
+                                        <apex:selectList id="billLoan" styleClass="form-control" value="{!selectedLoanHolder}" size="1">
                                             <apex:selectOptions value="{!loanHolders}"/>
                                         </apex:selectList>
                                     </div>
@@ -263,7 +305,7 @@
 
                                     <div class="form-group">
                                         <label>Typ rachunku</label>
-                                        <apex:selectList styleClass="form-control" value="{!selectedType}" size="1">
+                                        <apex:selectList id="billType" styleClass="form-control" value="{!selectedType}" size="1">
                                             <apex:selectOptions value="{!types}"/>
                                         </apex:selectList>
                                     </div>
@@ -272,6 +314,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteBill();">Usuń</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
                             <apex:commandButton value="Zapisz zmiany" styleClass="btn btn-primary" onclick="setSendForm(); sendBillForm(); return false;" reRender="BillsAll.mainForm"/>
                         </div>

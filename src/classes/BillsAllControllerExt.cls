@@ -79,14 +79,6 @@ public with sharing class BillsAllControllerExt {
     }
 
     public PageReference getFormData() {
-        System.debug('### Title :' + title);
-        System.debug('### Loan :' + selectedLoanHolder);
-        System.debug('### Status :' + selectedStatus);
-        System.debug('### Type :' + selectedType);
-        System.debug('### Pay :' + payDate);
-        System.debug('### Payed :' + payedDate);
-        System.debug('### Price :' + price);
-        System.debug('### ID :' + billId);
         Account account = BillsHelper.getAccountByName(selectedLoanHolder);
         Bill__c bill;
         try {
@@ -115,9 +107,13 @@ public with sharing class BillsAllControllerExt {
         } catch (DmlException e) {
             System.debug(e.getMessage());
         }
+        return reloadPage().setRedirect(true);
+    }
+
+    private PageReference reloadPage() {
         PageReference pageReference = Page.BillsMainPage;
         pageReference.getParameters().put('contact', LoggedUser.Id);
         pageReference.getParameters().put('menu', 'all');
-        return pageReference.setRedirect(true);
+        return pageReference;
     }
 }

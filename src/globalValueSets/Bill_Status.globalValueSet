@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Do zapłaty</fullName>
+        <default>true</default>
+        <label>Do zapłaty</label>
+    </customValue>
+    <customValue>
+        <fullName>Zapłacone</fullName>
+        <default>false</default>
+        <label>Zapłacone</label>
+    </customValue>
+    <customValue>
+        <fullName>Do wyjaśnienia</fullName>
+        <default>false</default>
+        <label>Do wyjaśnienia</label>
+    </customValue>
+    <customValue>
+        <fullName>Do potwierdzenia</fullName>
+        <default>false</default>
+        <label>Do potwierdzenia</label>
+    </customValue>
+    <customValue>
+        <fullName>Inne</fullName>
+        <default>false</default>
+        <label>Inne</label>
+    </customValue>
+    <masterLabel>Bill Status</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Kredyt</fullName>
+        <default>true</default>
+        <label>Kredyt</label>
+    </customValue>
+    <customValue>
+        <fullName>Czynsz</fullName>
+        <default>false</default>
+        <label>Czynsz</label>
+    </customValue>
+    <customValue>
+        <fullName>Gaz</fullName>
+        <default>false</default>
+        <label>Gaz</label>
+    </customValue>
+    <customValue>
+        <fullName>Prąd</fullName>
+        <default>false</default>
+        <label>Prąd</label>
+    </customValue>
+    <customValue>
+        <fullName>Woda</fullName>
+        <default>false</default>
+        <label>Woda</label>
+    </customValue>
+    <customValue>
+        <fullName>Zakupy</fullName>
+        <default>false</default>
+        <label>Zakupy</label>
+    </customValue>
+    <customValue>
+        <fullName>Inne</fullName>
+        <default>false</default>
+        <label>Inne</label>
+    </customValue>
+    <masterLabel>Bill Type</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>
